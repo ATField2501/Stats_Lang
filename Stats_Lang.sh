@@ -8,6 +8,8 @@ ROUGE="\\033[1;31m"
 JAUNE="\\033[1;33m"
 VERT="\\033[1;32m"
 
+letters=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
+
 Fonction_Quit(){                                     
    exit
 }
@@ -61,135 +63,17 @@ Fonction_Aide(){
 
 
 Fonction_Pricipale(){
-   cat $1 | grep -ni "a" > temporaire.tmp         # Tri le fichier en entrée et renvoie la sortie ne comportant que la lettre vers le fichier temporaire.tmp
-   wc -l temporaire.tmp > temporaire01.tmp      # Compte le nombre de lignes dans le fichier ne comportant que les mots comportant l'objet de la recherche (lettre) et renvois son resultat sur celui-ci
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    # Coupe la deuxieme colonne du fichier pour le réécrire proprement.
-   echo -e "   $(cat temporaire02.tmp)"" - A - " >> temporaire03.tmp  # Envois le résultat dans un fichier pour appliquer un trie
-
-   cat $1 | grep -ni "b" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - B - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "c" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - C - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "d" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - D - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "e" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - E - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "f" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - F - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "g" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - G - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "h" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - H - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "i" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - I - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "j" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - J - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "k" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - K - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "l" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - L - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "m" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - M - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "n" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - N - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "o" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - O - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "p" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - P - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "q" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - Q - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "r" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - R - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "s" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - S - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "t" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - T - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "u" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - U - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "v" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - V - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "w" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - W - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "x" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - X - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "y" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - Y - " >> temporaire03.tmp
-
-   cat $1 | grep -ni "z" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - Z - " >> temporaire03.tmp
+   i=0
+   let "max=26"
+   while [ $i != $max ]
+   do    
+      mot=${letters[$i]}                                  # Utilisation d'un tableau pour ne pas repeter la procedure 26 fois.
+      cat $1 | grep -ni $mot > temporaire.tmp             # Tri le fichier en entrée et renvoie la sortie ne comportant que la lettre vers le fichier temporaire.tmp
+      wc -l temporaire.tmp > temporaire01.tmp             # Compte le nombre de lignes dans le fichier ne comportant que les mots avec l'objet de la recherche (lettre) et renvois son resultat sur celui-ci
+      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp   # Coupe la deuxieme colonne du fichier pour le réécrire proprement.
+      echo -e "   $(cat temporaire02.tmp)"" - "$mot" - " >> temporaire03.tmp  # Envois le résultat dans un fichier pour appliquer un trie             
+      let i+=1
+   done
 
    sort -nr temporaire03.tmp > temporaire04.tmp
    cat temporaire04.tmp
@@ -199,135 +83,17 @@ Fonction_Pricipale(){
 
 
 Fonction_Disparition(){
-   cat $1 | grep -niv "a" > temporaire.tmp         # Tri le fichier en entrée et renvoie la sortie ne comportant pas lettre vers le fichier temporaire.tmp
-   wc -l temporaire.tmp > temporaire01.tmp      # Compte le nombre de lignes dans le fichier ne comportant que les mots comportant l'objet de la recherche (lettre) et renvois son resultat sur celui-ci
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    # Coupe la deuxieme colonne du fichier pour le réécrire proprement.
-   echo -e "   $(cat temporaire02.tmp)"" - A - " >> temporaire03.tmp  # Envois le résultat dans un fichier pour appliquer un trie
-
-   cat $1 | grep -niv "b" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - B - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "c" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - C - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "d" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - D - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "e" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - E - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "f" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - F - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "g" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - G - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "h" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - H - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "i" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - I - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "j" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - J - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "k" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - K - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "l" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - L - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "m" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - M - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "n" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - N - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "o" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - O - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "p" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - P - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "q" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - Q - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "r" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - R - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "s" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - S - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "t" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - T - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "u" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - U - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "v" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - V - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "w" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - W - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "x" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - X - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "y" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - Y - " >> temporaire03.tmp
-
-   cat $1 | grep -niv "z" > temporaire.tmp        
-   wc -l temporaire.tmp > temporaire01.tmp     
-   cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    
-   echo -e "   $(cat temporaire02.tmp)"" - Z - " >> temporaire03.tmp
+   i=0
+   let "max=26"
+   while [ $i != $max ]
+   do    
+      mot=${letters[$i]}  
+      cat $1 | grep -niv $mot > temporaire.tmp               # Tri le fichier en entrée et renvoie la sortie ne comportant pas lettre vers le fichier temporaire.tmp
+      wc -l temporaire.tmp > temporaire01.tmp               # Compte le nombre de lignes ne comportant que les mots avec l'objet de la recherche (lettre) et renvois son resultat sur celui-ci
+      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp     # Coupe la deuxieme colonne du fichier pour le réécrire proprement.
+      echo -e "   $(cat temporaire02.tmp)"" - "$mot" - " >> temporaire03.tmp  # Envois le résultat dans un fichier pour appliquer un trie
+      let i+=1
+   done
 
    sort -nr temporaire03.tmp > temporaire04.tmp
    cat temporaire04.tmp
