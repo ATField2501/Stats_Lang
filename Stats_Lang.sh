@@ -9,7 +9,8 @@ JAUNE="\\033[1;33m"
 VERT="\\033[1;32m"
 
 sequence=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "T" "U" "V" "W" "X" "Y" "Z")
-
+sequence2=("0" "1" "2" "3" "4" "5" "6" "7" "8" "9")
+sequence3=(',' ':' ';' '!' '?' '-' '_' '%' '&' '~' '{' '}' '[' ']' '|' '+' '=' '°' '§' '<' '>')
 
 Fonction_Quit(){                                     
    exit
@@ -29,7 +30,7 @@ Fonction_Version(){
    echo -e "$VERT""  *****************  "
    echo -e "$VERT""  **   (;,,;)    **  "
    echo -e "$VERT""  *****************  "
-   echo -e "$VERT""  *    V  1.O     *  "
+   echo -e "$VERT""  *    V  2.O     *  "
    echo -e "$VERT""  *****************  "
    echo -e "$JAUNE""----------------------"
 }
@@ -59,12 +60,10 @@ Fonction_Aide(){
    echo -e "$VERT" "Stats_lang <cible.txt> //pour le nombres de mots utilisant un charactère donné\n"
    echo -e "$VERT" "Stats_lang <cible.txt> --g //pour afficher un graphique\n"
    echo -e "$VERT" "Stats_lang <cible.txt> --d //pour le mode disparition. Renvois le nombre de mots ne comportant pas la cible"
-   echo -e "$VERT" "La cible doit etre un charactère alphabétique.\n"
 }
 
 
 Fonction_tri(){
-   echo -e "$JAUNE""--- Mise en ordre ---"; echo -en "$VERT""" 
    sort -nr temporaire03.tmp > temporaire04.tmp
    cat temporaire04.tmp
    rm -f temporaire03.tmp
@@ -73,6 +72,7 @@ Fonction_tri(){
 
 
 Fonction_Pricipale(){
+   echo -e "$JAUNE""---  Alphabétique  ---"; echo -en "$VERT""" 
    for e in ${sequence[*]}
    do
       cat $1 | grep -ni "$e" > temporaire.tmp        # Tri le fichier en entrée et renvoie la sortie ne comportant que la lettre vers le fichier temporaire.tmp
@@ -81,13 +81,33 @@ Fonction_Pricipale(){
       echo -e "   $(cat temporaire02.tmp)"" - $e - " >> temporaire03.tmp # Envois le résultat dans un fichier pour appliquer un tri
       rm -f temporaire02.tmp  # Reintialisation du fichier pour la lettre suivante
    done
-   cat temporaire03.tmp
+   Fonction_tri
+   echo -e "$JAUNE""---  Numérique  ---"; echo -en "$VERT""" 
+   for e in ${sequence2[*]}
+   do
+      cat $1 | grep -ni "$e" > temporaire.tmp       
+      wc -l temporaire.tmp > temporaire01.tmp     
+      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp   
+      echo -e "   $(cat temporaire02.tmp)"" - $e - " >> temporaire03.tmp 
+      rm -f temporaire02.tmp  
+   done
+   Fonction_tri
+   echo -e "$JAUNE""---  Spéciaux  ---"; echo -en "$VERT""" 
+   for e in ${sequence3[*]}
+   do
+      cat $1 | grep -n "$e" > temporaire.tmp 2> /dev/null      
+      wc -l temporaire.tmp > temporaire01.tmp     
+      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp   
+      echo -e "   $(cat temporaire02.tmp)"" - $e - " >> temporaire03.tmp 
+      rm -f temporaire02.tmp  
+   done
    Fonction_tri
 }
 
 
 
 Fonction_Disparition(){
+   echo -e "$JAUNE""---  Alphabétique  ---"; echo -en "$VERT""" 
    for e in ${sequence[*]}
    do
       cat $1 | grep -niv "$e" > temporaire.tmp         # Tri le fichier en entrée et renvoie la sortie ne comportant pas lettre vers le fichier temporaire.tmp
@@ -96,18 +116,37 @@ Fonction_Disparition(){
       echo -e "   $(cat temporaire02.tmp)"" - $e - " >> temporaire03.tmp  # Envois le résultat dans un fichier pour appliquer un trie
       rm -f temporaire02.tmp  
    done
-   cat temporaire03.tmp
+   Fonction_tri
+   echo -e "$JAUNE""---  Numérique  ---"; echo -en "$VERT""" 
+   for e in ${sequence2[*]}
+   do
+      cat $1 | grep -niv "$e" > temporaire.tmp        
+      wc -l temporaire.tmp > temporaire01.tmp      
+      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp   
+      echo -e "   $(cat temporaire02.tmp)"" - $e - " >> temporaire03.tmp  
+      rm -f temporaire02.tmp  
+   done
+   Fonction_tri
+   echo -e "$JAUNE""---  Spéciaux  ---"; echo -en "$VERT""" 
+   for e in ${sequence3[*]}
+   do
+      cat $1 | grep -niv "$e" > temporaire.tmp 2> /dev/null       
+      wc -l temporaire.tmp > temporaire01.tmp      
+      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp   
+      echo -e "   $(cat temporaire02.tmp)"" - $e - " >> temporaire03.tmp  
+      rm -f temporaire02.tmp  
+   done
    Fonction_tri
 }
 
 
 Fonction_Graph(){
+   echo -e "$JAUNE""---  Alphabétique  ---"; echo -en "$VERT""" 
    for e in ${sequence[*]} 
    do
+      touch temporaire06.tmp
       cat $1 | wc -l > Total.tmp   # Calcul du total
       total=`cut -d T -f 1 Total.tmp` # Stockage du resultat dans une variable
-  
-
       cat $1 | grep -ni "$e" > temporaire.tmp   # Tri le fichier en entrée et renvoie la sortie ne comportant que la lettre vers le fichier temporaire.tmp       
       pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`    # Compte le nombre de lignes est le renvois.
       let "pourcent = ($pourcent * 100)/"$total""   # Calcul du pourcentage
@@ -124,9 +163,50 @@ Fonction_Graph(){
       touch temporaire06.tmp   # Recréation du fichier vide pour cohérence avec la commande cat qui leve une erreur quant aucun fichier n'est créer pareque aucun barre-graphe
    done 
 
+   echo -e "$JAUNE""---   Numérique    ---"; echo -en "$VERT""" 
+   for e in ${sequence2[*]} 
+   do
+      cat $1 | wc -l > Total.tmp   
+      total=`cut -d T -f 1 Total.tmp` 
+      cat $1 | grep -ni "$e" > temporaire.tmp      
+      pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`    
+      let "pourcent = ($pourcent * 100)/"$total"" 
+      let "barreG = $pourcent"/10                         
+      i=0
+      while [ $i != $barreG ]
+      do
+         echo -n "|" >> temporaire06.tmp 
+         let i+=1 
+      done
+      barreGraphe=`cat temporaire06.tmp` 
+      echo -e "  $pourcent % - $e - $barreGraphe" >> temporaire05.tmp            
+      rm -f temporaire06.tmp  
+      touch temporaire06.tmp   
+   done 
+
+   echo -e "$JAUNE""---   Spéciaux     ---"; echo -en "$VERT""" 
+   for e in ${sequence3[*]} 
+   do
+      cat $1 | wc -l > Total.tmp   
+      total=`cut -d T -f 1 Total.tmp` 
+      cat $1 | grep -ni "$e" > temporaire.tmp 2> /dev/null    
+      pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`    
+      let "pourcent = ($pourcent * 100)/"$total"" 
+      let "barreG = $pourcent"/10                         
+      i=0
+      while [ $i != $barreG ]
+      do
+         echo -n "|" >> temporaire06.tmp 
+         let i+=1 
+      done
+      barreGraphe=`cat temporaire06.tmp` 
+      echo -e "  $pourcent % - $e - $barreGraphe" >> temporaire05.tmp            
+      rm -f temporaire06.tmp  
+      touch temporaire06.tmp   
+   done 
+
    echo -e "$JAUNE""-- Statistiques ---"; echo -en "$VERT"""  
-   cat temporaire05.tmp 
-   echo -e "$JAUNE""--- Mise en ordre ---"; echo -en "$VERT""" 
+
    sort -nr temporaire05.tmp > temporaire04.tmp
    cat temporaire04.tmp
    rm -f temporaire03.tmp          
