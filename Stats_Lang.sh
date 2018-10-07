@@ -1,14 +1,15 @@
 #!/bin/bash
 # -*- coding: utf8
 # Auteur: Cagliostro <atfield2501@gmail.com>
-# Script de statistique sur l'usage des lettres dans une langue donnée.
+# Script de statistique sur l'usage des charctères et des mots dans un fichier txt.
 
 
 ROUGE="\\033[1;31m"
 JAUNE="\\033[1;33m"
 VERT="\\033[1;32m"
 
-letters=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z")
+sequence=("A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "T" "U" "V" "W" "X" "Y" "Z")
+
 
 Fonction_Quit(){                                     
    exit
@@ -62,474 +63,73 @@ Fonction_Aide(){
 }
 
 
-Fonction_Pricipale(){
-   i=0
-   let "max=26"
-   while [ $i != $max ]
-   do    
-      mot=${letters[$i]}                                  # Utilisation d'un tableau pour ne pas repeter la procedure 26 fois.
-      cat $1 | grep -ni $mot > temporaire.tmp             # Tri le fichier en entrée et renvoie la sortie ne comportant que la lettre vers le fichier temporaire.tmp
-      wc -l temporaire.tmp > temporaire01.tmp             # Compte le nombre de lignes dans le fichier ne comportant que les mots avec l'objet de la recherche (lettre) et renvois son resultat sur celui-ci
-      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp   # Coupe la deuxieme colonne du fichier pour le réécrire proprement.
-      echo -e "   $(cat temporaire02.tmp)"" - "$mot" - " >> temporaire03.tmp  # Envois le résultat dans un fichier pour appliquer un trie             
-      let i+=1
-   done
-
+Fonction_tri(){
+   echo -e "$JAUNE""--- Mise en ordre ---"; echo -en "$VERT""" 
    sort -nr temporaire03.tmp > temporaire04.tmp
    cat temporaire04.tmp
-   rm -f temporaire04.tmp
+   rm -f temporaire03.tmp
+
+}
+
+
+Fonction_Pricipale(){
+   for e in ${sequence[*]}
+   do
+      cat $1 | grep -ni "$e" > temporaire.tmp        # Tri le fichier en entrée et renvoie la sortie ne comportant que la lettre vers le fichier temporaire.tmp
+      wc -l temporaire.tmp > temporaire01.tmp     # Compte le nombre de lignes dans le fichier ne comportant que les mots comportant l'objet de la recherche (lettre) et renvois son resultat sur celui-ci
+      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp   # Coupe la deuxieme colonne du fichier pour le réécrire proprement. 
+      echo -e "   $(cat temporaire02.tmp)"" - $e - " >> temporaire03.tmp # Envois le résultat dans un fichier pour appliquer un tri
+      rm -f temporaire02.tmp  # Reintialisation du fichier pour la lettre suivante
+   done
+   cat temporaire03.tmp
+   Fonction_tri
 }
 
 
 
 Fonction_Disparition(){
-   i=0
-   let "max=26"
-   while [ $i != $max ]
-   do    
-      mot=${letters[$i]}  
-      cat $1 | grep -niv $mot > temporaire.tmp               # Tri le fichier en entrée et renvoie la sortie ne comportant pas lettre vers le fichier temporaire.tmp
-      wc -l temporaire.tmp > temporaire01.tmp               # Compte le nombre de lignes ne comportant que les mots avec l'objet de la recherche (lettre) et renvois son resultat sur celui-ci
-      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp     # Coupe la deuxieme colonne du fichier pour le réécrire proprement.
-      echo -e "   $(cat temporaire02.tmp)"" - "$mot" - " >> temporaire03.tmp  # Envois le résultat dans un fichier pour appliquer un trie
-      let i+=1
+   for e in ${sequence[*]}
+   do
+      cat $1 | grep -niv "$e" > temporaire.tmp         # Tri le fichier en entrée et renvoie la sortie ne comportant pas lettre vers le fichier temporaire.tmp
+      wc -l temporaire.tmp > temporaire01.tmp      # Compte le nombre de lignes dans le fichier ne comportant que les mots comportant l'objet de la recherche (lettre) et renvois son resultat sur celui-ci
+      cut -d t -f 1 temporaire01.tmp > temporaire02.tmp    # Coupe la deuxieme colonne du fichier pour le réécrire proprement.
+      echo -e "   $(cat temporaire02.tmp)"" - $e - " >> temporaire03.tmp  # Envois le résultat dans un fichier pour appliquer un trie
+      rm -f temporaire02.tmp  
    done
-
-   sort -nr temporaire03.tmp > temporaire04.tmp
-   cat temporaire04.tmp
-  
-
+   cat temporaire03.tmp
+   Fonction_tri
 }
 
 
 Fonction_Graph(){
-   cat $1 | wc -l > Total.tmp   # Calcul du total
-   total=`cut -d T -f 1 Total.tmp` # Stockage du resultat dans une variable
+   for e in ${sequence[*]} 
+   do
+      cat $1 | wc -l > Total.tmp   # Calcul du total
+      total=`cut -d T -f 1 Total.tmp` # Stockage du resultat dans une variable
   
 
-   cat $1 | grep -ni "a" > temporaire.tmp   # Tri le fichier en entrée et renvoie la sortie ne comportant que la lettre vers le fichier temporaire.tmp       
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`    # Compte le nombre de lignes est le renvois.
-   let "pourcent = ($pourcent * 100)/"$total""   # Calcul du pourcentage
-   let "barreG = $pourcent"/10                          # Ajout du barre-graphe. Divise le porcentage par dix pour afficher le nombre en barre
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp # Ecriture du barre-graphe dans un fichier temporaire
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` # Assignation du contenu du fichier dans une variable
-   echo -e "  $pourcent % - A - $barreGraphe" >> temporaire05.tmp            # ecriture du pourcentage dans un fichier
-   rm -f temporaire06.tmp   # Suppression du fichier temporaire
-   touch temporaire06.tmp   # REcréation du fichier vide pour cohérence avec la commande cat qui leve une erreur quant aucun fichier n'est créer pareque aucun barre-graphe
+      cat $1 | grep -ni "$e" > temporaire.tmp   # Tri le fichier en entrée et renvoie la sortie ne comportant que la lettre vers le fichier temporaire.tmp       
+      pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`    # Compte le nombre de lignes est le renvois.
+      let "pourcent = ($pourcent * 100)/"$total""   # Calcul du pourcentage
+      let "barreG = $pourcent"/10                          # Ajout du barre-graphe. Divise le porcentage par dix pour afficher le nombre en barre
+      i=0
+      while [ $i != $barreG ]
+      do
+         echo -n "|" >> temporaire06.tmp # Ecriture du barre-graphe dans un fichier temporaire
+         let i+=1 
+      done
+      barreGraphe=`cat temporaire06.tmp` # Assignation du contenu du fichier dans une variable
+      echo -e "  $pourcent % - $e - $barreGraphe" >> temporaire05.tmp            # ecriture du pourcentage dans un fichier
+      rm -f temporaire06.tmp   # Suppression du fichier temporaire
+      touch temporaire06.tmp   # Recréation du fichier vide pour cohérence avec la commande cat qui leve une erreur quant aucun fichier n'est créer pareque aucun barre-graphe
+   done 
 
-
-   cat $1 | grep -ni "b" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - B - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "c" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - c - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-    
-   cat $1 | grep -ni "d" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - D - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-     
-   cat $1 | grep -ni "e" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - E - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-       
-   cat $1 | grep -ni "f" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - F - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-    
-   cat $1 | grep -ni "g" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - G - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-   
-   cat $1 | grep -ni "h" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - H - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-   
-   cat $1 | grep -ni "i" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - I - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-  
-   cat $1 | grep -ni "j" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - J - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-      
-   cat $1 | grep -ni "k" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - K - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "l" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - L - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "m" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - M - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
- 
-   cat $1 | grep -ni "n" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - N - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-   
-   cat $1 | grep -ni "o" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - O - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "p" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - P - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "q" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - Q - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "r" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - R - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "s" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - S - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "t" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - T - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-                                       
-   cat $1 | grep -ni "u" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - U - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
- 
-   cat $1 | grep -ni "v" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - V - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "w" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - W - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "x" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - X - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-            
-   cat $1 | grep -ni "y" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - Y - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
-
-   cat $1 | grep -ni "z" > temporaire.tmp        
-   pourcent=`echo -e "$(echo -e "$(wc -l temporaire.tmp | cut -d t -f 1)")"`   
-   let "pourcent = ($pourcent * 100)/"$total""   
-   let "barreG = $pourcent"/10    
-   i=0
-   while [ $i != $barreG ]
-   do
-      echo -n "|" >> temporaire06.tmp 
-      let i+=1 
-   done
-   barreGraphe=`cat temporaire06.tmp` 
-   echo -e "  $pourcent % - Z - $barreGraphe" >> temporaire05.tmp           
-   rm -f temporaire06.tmp
-   touch temporaire06.tmp
-
- 
-
-   sort -nr temporaire05.tmp >> temporaire04.tmp
-   echo -e "$JAUNE""-- Statistiques ---"; echo -en "$VERT""" 
-   cat temporaire05.tmp
+   echo -e "$JAUNE""-- Statistiques ---"; echo -en "$VERT"""  
+   cat temporaire05.tmp 
    echo -e "$JAUNE""--- Mise en ordre ---"; echo -en "$VERT""" 
+   sort -nr temporaire05.tmp > temporaire04.tmp
    cat temporaire04.tmp
-              
+   rm -f temporaire03.tmp          
 }
 
 
